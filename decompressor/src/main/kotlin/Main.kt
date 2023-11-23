@@ -18,29 +18,78 @@ fun main(args: Array<String>) {
     println()
     println()
 
-    if(args.size != 1)
+    if(args.size < 2)
     {
-        println("Usage: earextract archive.ear or earextract file.pex")
-        println("WARNING: EAR archives not currently working correctly.")
+        printUsage()
         return
     }
 
-    val file = File(args[0])
+    if(args[0] == "c") {
 
-    if(!file.exists()) {
-        println("File doesn't exist!")
-        return
+        val file1 = File(args[1])
+        val file2 = File(args[2])
+
+        if(!file1.exists() ) {
+            println("File doesn't exist! ${file1.name}")
+            return
+        }
+        else if(!file1.name.endsWith(".hdr", true))
+        {
+            println("First input needs to be a .hdr file! ${file1.name}")
+            printUsage()
+            return
+        }
+
+        else if(!file2.exists() ) {
+            println("File doesn't exist! ${file2.name}")
+            return
+        }
+        else if(!file2.name.endsWith(".dec", true))
+        {
+            println("Second input needs to be a .dec file! ${file1.name}")
+            printUsage()
+            return
+        }
+
+        val fileName = file1.name.removeSuffix(".hdr")
+
+        val headerBytes = file1.readBytes()
+        val decompressedBytes = DataHandler.compress(file2.readBytes().toUByteArray())
+
+        File(fileName).writeBytes(headerBytes + decompressedBytes)
+
     }
+    else if(args[0] == "d") {
 
-    val byteStream = ByteStream(file.readBytes().toUByteArray())
+        val file = File(args[1])
 
-    if(args[0].endsWith(".PEX", true)) {
+        if(!file.exists()) {
+            println("File doesn't exist!")
+            return
+        }
+
+        val byteStream = ByteStream(file.readBytes().toUByteArray())
         DataHandler.extractPex(byteStream, file.name)
-    }
-    else if(args[0].endsWith(".EAR", true))
-    {
-        DataHandler.extractEar(byteStream, file.name)
-    }
 
+        /*
+        if(args[0].endsWith(".PEX", true)) {
+            DataHandler.extractPex(byteStream, file.name)
+        }
+        else if(args[0].endsWith(".EAR", true))
+        {
+            DataHandler.extractEar(byteStream, file.name)
+        }
+        */
+    }
+    else {
+        printUsage()
+        return
+    }
+}
 
+fun printUsage() {
+    println("decompressor d file.pex")
+    println("\t decompress pex file, creates a .dec file and a .hdr file")
+    println("decompressor c file.pex.hdr file.pex.dex")
+    println("\t compress pex file, needs a .hdr file and a .dec file")
 }
