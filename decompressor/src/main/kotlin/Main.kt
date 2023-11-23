@@ -90,6 +90,6 @@ fun main(args: Array<String>) {
 fun printUsage() {
     println("decompressor d file.pex")
     println("\t decompress pex file, creates a .dec file and a .hdr file")
-    println("decompressor c file.pex.hdr file.pex.dex")
+    println("decompressor c file.pex.hdr file.pex.dechistory ")
     println("\t compress pex file, needs a .hdr file and a .dec file")
 }

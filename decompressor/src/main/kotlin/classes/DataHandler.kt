@@ -409,13 +409,13 @@ object DataHandler {
         var i = -1
         var match = MatchInfo(0, 0)
 
-        while (i >= -currentPtr) {
+        while (i >= -currentPtr && i > -4096) {
             if(srcBuffer[currentPtr + i] == srcBuffer[currentPtr]) {
                 var j = 0
                 while(currentPtr + j < srcBuffer.size && srcBuffer[currentPtr + i + j] == srcBuffer[currentPtr + j] ) {
                     j++
                 }
-                if(j > 1 && j > match.length && i > -4096)
+                if(j > 1 && j > match.length)
                     match = MatchInfo(j, i)
             }
             i--
